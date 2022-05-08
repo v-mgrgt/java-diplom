@@ -6,18 +6,14 @@ import ru.netology.graphics.image.TextGraphicsConverter;
 
 import java.io.*;
 import java.net.InetSocketAddress;
-import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/**
- * Сервер уже за вас написан, его трогать не надо :)
-*/
 public class GServer {
     public static final int PORT = 8888;
 
-    private HttpServer server;
-    private TextGraphicsConverter converter;
+    private final HttpServer server;
+    private final TextGraphicsConverter converter;
 
     public GServer(TextGraphicsConverter converter) throws Exception {
         if (converter == null) {
@@ -30,7 +26,7 @@ public class GServer {
 
         server = HttpServer.create(new InetSocketAddress("localhost", PORT), 0);
         server.createContext("/", this::serveHtml);
-        server.createContext("/convert", this::serveConvertion);
+        server.createContext("/convert", this::serveConversion);
     }
 
     public void start() {
@@ -52,7 +48,7 @@ public class GServer {
         h.close();
     }
 
-    protected void serveConvertion(HttpExchange h) throws IOException {
+    protected void serveConversion(HttpExchange h) throws IOException {
         System.out.println("Convert request..");
         var url = new BufferedReader(new InputStreamReader(h.getRequestBody())).readLine();
         try {
